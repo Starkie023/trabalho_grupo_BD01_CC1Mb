@@ -1,0 +1,496 @@
+# LOGIN DO USUÁRIO ROOT:
+mysql -u root -p
+computacao@raiz
+
+# CRIAÇÃO DO BANCO DE DADOS igreja:
+create database igreja
+character set UTF8mb4
+collate utf8mb4_bin;
+
+# CRIAÇÃO DO USUÁRIO:
+create user pastor identified by '123456';
+grant all privileges on igreja.* to pastor;
+
+# TROCANDO DO USUÁRIO ROOT PARA O USUÁRIO pastor:
+system mysql -u pastor -p
+123456
+
+# ATIVANDO O BANCO DE DADOS:
+use igreja;
+
+# CRIAÇÃO DAS TABELAS:
+CREATE TABLE colaboram (
+                cod_membro INT NOT NULL,
+                Colaborador VARCHAR(100) NOT NULL,
+                PRIMARY KEY (cod_membro)
+);
+
+ALTER TABLE colaboram COMMENT 'Auto relacionamento da tabela membros';
+
+ALTER TABLE colaboram MODIFY COLUMN cod_membro INTEGER COMMENT 'Código único do membro referido.';
+
+ALTER TABLE colaboram MODIFY COLUMN Colaborador VARCHAR(100) COMMENT 'Nome do colaborador.';
+
+
+CREATE TABLE disponibilidade (
+                cod_trabalhador INT NOT NULL,
+                dias_disponibilidade DATE NOT NULL,
+                horarios_disponibilidade TIME NOT NULL,
+                PRIMARY KEY (cod_trabalhador)
+);
+
+ALTER TABLE disponibilidade COMMENT 'Tabela de disponibilidade.';
+
+ALTER TABLE disponibilidade MODIFY COLUMN cod_trabalhador INTEGER COMMENT 'Código único do trabalhador.';
+
+ALTER TABLE disponibilidade MODIFY COLUMN dias_disponibilidade DATE COMMENT 'Dias em que o trabalhador está disponivel.';
+
+ALTER TABLE disponibilidade MODIFY COLUMN horarios_disponibilidade TIME COMMENT 'Horas de disponibilidade.';
+
+
+CREATE TABLE telefone_comunidade (
+                cod_telefone_com INT NOT NULL,
+                telefone_comunidade INT NOT NULL,
+                PRIMARY KEY (cod_telefone_com)
+);
+
+ALTER TABLE telefone_comunidade COMMENT 'Tabela que armazena os telefones das comunidades.';
+
+ALTER TABLE telefone_comunidade MODIFY COLUMN cod_telefone_com INTEGER COMMENT 'Código único do telefone da comunidade.';
+
+ALTER TABLE telefone_comunidade MODIFY COLUMN telefone_comunidade INTEGER COMMENT 'Telefone das comunidades.';
+
+
+CREATE TABLE telefone_atendidos (
+                cod_telefone_atd INT NOT NULL,
+                telefone_atendido INT NOT NULL,
+                PRIMARY KEY (cod_telefone_atd)
+);
+
+ALTER TABLE telefone_atendidos COMMENT 'Tabela que armazena os telefones atendidos.';
+
+ALTER TABLE telefone_atendidos MODIFY COLUMN cod_telefone_atd INTEGER COMMENT 'Código único do telefone atendido.';
+
+ALTER TABLE telefone_atendidos MODIFY COLUMN telefone_atendido INTEGER COMMENT 'Telefone atendido.';
+
+
+CREATE TABLE telefone_membro (
+                cod_telefone_mem INT NOT NULL,
+                telefone_membro INT NOT NULL,
+                PRIMARY KEY (cod_telefone_mem)
+);
+
+ALTER TABLE telefone_membro COMMENT 'Tabela que armazena os telefones dos membros.';
+
+ALTER TABLE telefone_membro MODIFY COLUMN cod_telefone_mem INTEGER COMMENT 'Código único do telefone do membro.';
+
+ALTER TABLE telefone_membro MODIFY COLUMN telefone_membro INTEGER COMMENT 'Telefone dos membros.';
+
+
+CREATE TABLE endereco_comunidade (
+                cod_end_comunidade INT NOT NULL,
+                logradouro CHAR(50) NOT NULL,
+                numero INT NOT NULL,
+                complemento VARCHAR(100),
+                bairro VARCHAR(50) NOT NULL,
+                cidade VARCHAR(30) NOT NULL,
+                uf CHAR(2) NOT NULL,
+                cep CHAR(9) NOT NULL,
+                PRIMARY KEY (cod_end_comunidade)
+);
+
+ALTER TABLE endereco_comunidade COMMENT 'Tabela com as informações de endereço das comunidades.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN cod_end_comunidade INTEGER COMMENT 'Código único linkado a tabela de membros.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN logradouro CHAR(50) COMMENT 'Logradouro da comunidade.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN numero INTEGER COMMENT 'Número da casa.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN complemento VARCHAR(100) COMMENT 'Complemento adcional e não obrigatório.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN bairro VARCHAR(50) COMMENT 'Bairro onde fica a comunidade.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN cidade VARCHAR(30) COMMENT 'Cidade onde fica a comunidade.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN uf CHAR(2) COMMENT 'Estado onde fica a comunidade.';
+
+ALTER TABLE endereco_comunidade MODIFY COLUMN cep CHAR(9) COMMENT 'CEP dos correios.';
+
+
+CREATE TABLE comunidades (
+                cod_comunidade INT NOT NULL,
+                nome VARCHAR(100) NOT NULL,
+                cod_telefone INT NOT NULL,
+                email CHAR(30),
+                cod_end_comunidade INT NOT NULL,
+                PRIMARY KEY (cod_comunidade)
+);
+
+ALTER TABLE comunidades COMMENT 'Comunidades envolvidas nos programas e na igreja.';
+
+ALTER TABLE comunidades MODIFY COLUMN cod_comunidade INTEGER COMMENT 'Código único da comunidade.';
+
+ALTER TABLE comunidades MODIFY COLUMN nome VARCHAR(100) COMMENT 'Nome da comunidade.';
+
+ALTER TABLE comunidades MODIFY COLUMN cod_telefone INTEGER COMMENT 'Código único do telefone.';
+
+ALTER TABLE comunidades MODIFY COLUMN email CHAR(30) COMMENT 'E-mail da comunidade.';
+
+ALTER TABLE comunidades MODIFY COLUMN cod_end_comunidade INTEGER COMMENT 'Código único linkado a tabela de membros.';
+
+
+CREATE TABLE atendidos (
+                cod_comunidade INT NOT NULL,
+                nome VARCHAR(100) NOT NULL,
+                cod_telefone INT NOT NULL,
+                cpf CHAR(11),
+                cnpj CHAR(18),
+                PRIMARY KEY (cod_comunidade)
+);
+
+ALTER TABLE atendidos COMMENT 'Pessoas atendidas pelas comunidades.';
+
+ALTER TABLE atendidos MODIFY COLUMN cod_comunidade INTEGER COMMENT 'Código da comunidade onde é atendido.';
+
+ALTER TABLE atendidos MODIFY COLUMN nome VARCHAR(100) COMMENT 'Nome do atendido.';
+
+ALTER TABLE atendidos MODIFY COLUMN cod_telefone INTEGER COMMENT 'Código único do telefone.';
+
+ALTER TABLE atendidos MODIFY COLUMN cpf CHAR(11) COMMENT 'CPF do atendido.';
+
+ALTER TABLE atendidos MODIFY COLUMN cnpj CHAR(18) COMMENT 'CNPJ do atendido.';
+
+
+CREATE TABLE endereco_membro (
+                cod_end_membro INT NOT NULL,
+                logradouro CHAR(50) NOT NULL,
+                numero INT NOT NULL,
+                complemento VARCHAR(100),
+                bairro VARCHAR(50) NOT NULL,
+                cidade VARCHAR(30) NOT NULL,
+                uf CHAR(2) NOT NULL,
+                cep CHAR(9) NOT NULL,
+                PRIMARY KEY (cod_end_membro)
+);
+
+ALTER TABLE endereco_membro COMMENT 'Tabela com as informações de endereço dos membros.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN cod_end_membro INTEGER COMMENT 'Código único linkado a tabela de membros.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN logradouro CHAR(50) COMMENT 'Logradouro do membro.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN numero INTEGER COMMENT 'Número da casa.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN complemento VARCHAR(100) COMMENT 'Complemento adcional e não obrigatório.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN bairro VARCHAR(50) COMMENT 'Bairro onde mora.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN cidade VARCHAR(30) COMMENT 'Cidade onde mora.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN uf CHAR(2) COMMENT 'Estado onde mora.';
+
+ALTER TABLE endereco_membro MODIFY COLUMN cep CHAR(9) COMMENT 'CEP dos correios.';
+
+
+CREATE TABLE membros (
+                cod_membro INT NOT NULL,
+                nome_completo VARCHAR(100) NOT NULL,
+                cod_end_membro INT NOT NULL,
+                cod_telefone INT NOT NULL,
+                profissão VARCHAR(30) NOT NULL,
+                data_nascimento DATE NOT NULL,
+                Sexo CHAR(1) NOT NULL,
+                estado_civil VARCHAR(15) NOT NULL,
+                PRIMARY KEY (cod_membro)
+);
+
+ALTER TABLE membros COMMENT 'Tabela que mostra os membros da igreja.';
+
+ALTER TABLE membros MODIFY COLUMN cod_membro INTEGER COMMENT 'Código único do membro referido.';
+
+ALTER TABLE membros MODIFY COLUMN nome_completo VARCHAR(100) COMMENT 'Nome do membro.';
+
+ALTER TABLE membros MODIFY COLUMN cod_end_membro INTEGER COMMENT 'Código único do endereço de cada membro.';
+
+ALTER TABLE membros MODIFY COLUMN cod_telefone INTEGER COMMENT 'Código único do telefone.';
+
+ALTER TABLE membros MODIFY COLUMN profissão VARCHAR(30) COMMENT 'Profissão do membro.';
+
+ALTER TABLE membros MODIFY COLUMN data_nascimento DATE COMMENT 'Data de nascimento do membro.';
+
+ALTER TABLE membros MODIFY COLUMN Sexo CHAR(1) COMMENT 'Sexo do membro(M ou F).';
+
+ALTER TABLE membros MODIFY COLUMN estado_civil VARCHAR(15) COMMENT 'Estado civil do membro. Solteiro(a), namorando, casado(a), divorciado(a), viuvo(a).';
+
+
+CREATE TABLE programas (
+                cod_programa INT NOT NULL,
+                cod_comunidade INT NOT NULL,
+                nome VARCHAR(100) NOT NULL,
+                descrição VARCHAR(150) NOT NULL,
+                objetivos VARCHAR NOT NULL,
+                data_inicio DATE NOT NULL,
+                data_final_prevista DATE,
+                PRIMARY KEY (cod_programa, cod_comunidade)
+);
+
+ALTER TABLE programas COMMENT 'Programas e atividades realizadas pela congregação.';
+
+ALTER TABLE programas MODIFY COLUMN cod_programa INTEGER COMMENT 'Código único do programa.';
+
+ALTER TABLE programas MODIFY COLUMN cod_comunidade INTEGER COMMENT 'Código único da comunidade que desenvolveu o programa.';
+
+ALTER TABLE programas MODIFY COLUMN nome VARCHAR(100) COMMENT 'Nome do programa.';
+
+ALTER TABLE programas MODIFY COLUMN descrição VARCHAR(150) COMMENT 'Descrição detalhada do programa.';
+
+ALTER TABLE programas MODIFY COLUMN objetivos VARCHAR COMMENT 'Objetivos dos programas.';
+
+ALTER TABLE programas MODIFY COLUMN data_inicio DATE COMMENT 'Data de inicio do programa.';
+
+ALTER TABLE programas MODIFY COLUMN data_final_prevista DATE COMMENT 'Data final do programa não obrigatória.';
+
+
+CREATE TABLE imagens (
+                cod_imagem INT NOT NULL,
+                nome_imagem VARCHAR(30) NOT NULL,
+                descricao VARCHAR(100) NOT NULL,
+                data_registro DATE NOT NULL,
+                cod_comunidade INT NOT NULL,
+                cod_programa INT NOT NULL,
+                PRIMARY KEY (cod_imagem)
+);
+
+ALTER TABLE imagens COMMENT 'Tabela de imagens.';
+
+ALTER TABLE imagens MODIFY COLUMN cod_imagem INTEGER COMMENT 'Código único da imagem.';
+
+ALTER TABLE imagens MODIFY COLUMN nome_imagem VARCHAR(30) COMMENT 'Nome da imagem.';
+
+ALTER TABLE imagens MODIFY COLUMN descricao VARCHAR(100) COMMENT 'Descrição da imagem.';
+
+ALTER TABLE imagens MODIFY COLUMN data_registro DATE COMMENT 'Data do registro da imagem.';
+
+ALTER TABLE imagens MODIFY COLUMN cod_comunidade INTEGER COMMENT 'Código único da comunidade.';
+
+ALTER TABLE imagens MODIFY COLUMN cod_programa INTEGER COMMENT 'Código único do programa.';
+
+
+CREATE TABLE doacoes (
+                cod_doacao INT NOT NULL,
+                nome_doador VARCHAR(100) NOT NULL,
+                data_doacao DATE NOT NULL,
+                tipo VARCHAR NOT NULL,
+                identificacao_doador VARCHAR(100),
+                PRIMARY KEY (cod_doacao)
+);
+
+ALTER TABLE doacoes COMMENT 'Tabela de doações.';
+
+ALTER TABLE doacoes MODIFY COLUMN cod_doacao INTEGER COMMENT 'Código ùnico da doação.';
+
+ALTER TABLE doacoes MODIFY COLUMN nome_doador VARCHAR(100) COMMENT 'Nome de pra quem vai a doação.';
+
+ALTER TABLE doacoes MODIFY COLUMN data_doacao DATE COMMENT 'Data de realização da doação.';
+
+ALTER TABLE doacoes MODIFY COLUMN tipo VARCHAR COMMENT 'Tipo da doação. Monetario, bens, trabalho.';
+
+ALTER TABLE doacoes MODIFY COLUMN identificacao_doador VARCHAR(100) COMMENT 'Identificação do doador. Pode ser anonimo ou não.';
+
+
+CREATE TABLE destinacoes (
+                cod_doacao INT NOT NULL,
+                cod_imagem INT NOT NULL,
+                data DATE NOT NULL,
+                recebedor VARCHAR(50) NOT NULL,
+                observacoes VARCHAR(100),
+                imagens BINARY NOT NULL,
+                PRIMARY KEY (cod_doacao)
+);
+
+ALTER TABLE destinacoes COMMENT 'Destinações das doações.';
+
+ALTER TABLE destinacoes MODIFY COLUMN cod_doacao INTEGER COMMENT 'Código único da doação.';
+
+ALTER TABLE destinacoes MODIFY COLUMN cod_imagem INTEGER COMMENT 'Código único da imagem. FK para a tabela imagem.';
+
+ALTER TABLE destinacoes MODIFY COLUMN data DATE COMMENT 'Data de recebimento da doação.';
+
+ALTER TABLE destinacoes MODIFY COLUMN recebedor VARCHAR(50) COMMENT 'Nome do recebedor.';
+
+ALTER TABLE destinacoes MODIFY COLUMN observacoes VARCHAR(100) COMMENT 'Observações sobre a doação e o destinatario.';
+
+ALTER TABLE destinacoes MODIFY COLUMN imagens BINARY COMMENT 'Imagens.';
+
+
+CREATE TABLE trabalhos (
+                cod_doacao INT NOT NULL,
+                tipo_trabalho VARCHAR(50) NOT NULL,
+                nome_doador VARCHAR(100) NOT NULL,
+                cod_trabalhador INT NOT NULL,
+                PRIMARY KEY (cod_doacao)
+);
+
+ALTER TABLE trabalhos COMMENT 'Tabela de trabalhos ofertados.';
+
+ALTER TABLE trabalhos MODIFY COLUMN cod_doacao INTEGER COMMENT 'Código único que liga a tabela as doações.';
+
+ALTER TABLE trabalhos MODIFY COLUMN tipo_trabalho VARCHAR(50) COMMENT 'Tipo de trabalho ofertado.';
+
+ALTER TABLE trabalhos MODIFY COLUMN nome_doador VARCHAR(100) COMMENT 'Nome do doador do trabalho.';
+
+ALTER TABLE trabalhos MODIFY COLUMN cod_trabalhador INTEGER COMMENT 'Código único do trabalhador. FK para a tabela disponibilidade.';
+
+
+CREATE TABLE bens (
+                cod_doacao INT NOT NULL,
+                descricao VARCHAR(100) NOT NULL,
+                tipo VARCHAR(50) NOT NULL,
+                PRIMARY KEY (cod_doacao)
+);
+
+ALTER TABLE bens COMMENT 'Tabela de doação de bens.';
+
+ALTER TABLE bens MODIFY COLUMN cod_doacao INTEGER COMMENT 'Código único que liga a tabela as doações.';
+
+ALTER TABLE bens MODIFY COLUMN descricao VARCHAR(100) COMMENT 'Descrição do bem doado.';
+
+ALTER TABLE bens MODIFY COLUMN tipo VARCHAR(50) COMMENT 'Tipo de bem doado.';
+
+
+CREATE TABLE monetario (
+                cod_doacao INT NOT NULL,
+                valor DECIMAL(9,2) NOT NULL,
+                tipo_moeda VARCHAR(50),
+                PRIMARY KEY (cod_doacao)
+);
+
+ALTER TABLE monetario COMMENT 'Doação do tipo monetaria.';
+
+ALTER TABLE monetario MODIFY COLUMN cod_doacao INTEGER COMMENT 'Código único que liga a tabela as doações.';
+
+ALTER TABLE monetario MODIFY COLUMN valor DECIMAL(9, 2) COMMENT 'Valor em dinheiro ofertado.';
+
+ALTER TABLE monetario MODIFY COLUMN tipo_moeda VARCHAR(50) COMMENT 'Tipo de moeda doada.';
+
+
+ALTER TABLE membros ADD CONSTRAINT colaboram_membros_fk
+FOREIGN KEY (cod_membro)
+REFERENCES colaboram (cod_membro)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE trabalhos ADD CONSTRAINT disponibilidade_trabalhos_fk
+FOREIGN KEY (cod_trabalhador)
+REFERENCES disponibilidade (cod_trabalhador)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE comunidades ADD CONSTRAINT telefone_comunidade_comunidades_fk
+FOREIGN KEY (cod_telefone)
+REFERENCES telefone_comunidade (cod_telefone_com)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE atendidos ADD CONSTRAINT telefone_atendidos_atendidos_fk
+FOREIGN KEY (cod_telefone)
+REFERENCES telefone_atendidos (cod_telefone_atd)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE membros ADD CONSTRAINT telefone_membro_membros_fk
+FOREIGN KEY (cod_telefone)
+REFERENCES telefone_membro (cod_telefone_mem)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE comunidades ADD CONSTRAINT endereco_comunidade_comunidades_fk
+FOREIGN KEY (cod_end_comunidade)
+REFERENCES endereco_comunidade (cod_end_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE programas ADD CONSTRAINT comunidades_programas_fk
+FOREIGN KEY (cod_comunidade)
+REFERENCES comunidades (cod_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE imagens ADD CONSTRAINT comunidades_imagens_fk
+FOREIGN KEY (cod_comunidade)
+REFERENCES comunidades (cod_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE atendidos ADD CONSTRAINT comunidades_atendidos_fk
+FOREIGN KEY (cod_comunidade)
+REFERENCES comunidades (cod_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE imagens ADD CONSTRAINT atendidos_imagens_fk
+FOREIGN KEY (cod_comunidade)
+REFERENCES atendidos (cod_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE membros ADD CONSTRAINT endereco_membros_fk
+FOREIGN KEY (cod_end_membro)
+REFERENCES endereco_membro (cod_end_membro)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+/*
+Warning: Relationship has no columns to map:
+*/
+ALTER TABLE doacoes ADD CONSTRAINT membros_doacoes_fk
+FOREIGN KEY ()
+REFERENCES membros ()
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+/*
+Warning: Relationship has no columns to map:
+*/
+ALTER TABLE programas ADD CONSTRAINT membros_programas_fk
+FOREIGN KEY ()
+REFERENCES membros ()
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE imagens ADD CONSTRAINT programas_imagens_fk
+FOREIGN KEY (cod_programa, cod_comunidade)
+REFERENCES programas (cod_programa, cod_comunidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE destinacoes ADD CONSTRAINT imagens_destinacoes_fk
+FOREIGN KEY (cod_imagem)
+REFERENCES imagens (cod_imagem)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE monetario ADD CONSTRAINT doacoes_monetario_fk
+FOREIGN KEY (cod_doacao)
+REFERENCES doacoes (cod_doacao)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE bens ADD CONSTRAINT doacoes_bens_fk
+FOREIGN KEY (cod_doacao)
+REFERENCES doacoes (cod_doacao)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE trabalhos ADD CONSTRAINT doacoes_trabalhos_fk
+FOREIGN KEY (cod_doacao)
+REFERENCES doacoes (cod_doacao)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE destinacoes ADD CONSTRAINT doacoes_destinacoes_fk
+FOREIGN KEY (cod_doacao)
+REFERENCES doacoes (cod_doacao)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
